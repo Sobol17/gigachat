@@ -7,7 +7,7 @@ import 'package:simple_todo/utils/token_storage.dart';
 void main() async {
   await Hive.initFlutter();
   await Hive.openBox<String>('authBox');
-  await Hive.openBox<Map<String, dynamic>>('chatHistory');
+  await Hive.openBox('chatHistory');
 
   final tokenStorage = TokenStorage();
 
