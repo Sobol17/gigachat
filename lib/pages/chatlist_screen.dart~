@@ -1,0 +1,54 @@
+import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'chat_screen.dart';
+
+class ChatListScreen extends StatefulWidget {
+  @override
+  _ChatListScreenState createState() => _ChatListScreenState();
+}
+
+class _ChatListScreenState extends State<ChatListScreen> {
+  final Box<Map<String, dynamic>> _chatListBox = Hive.box<Map<String, dynamic>>('chatListBox');
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Список чатов'),
+      ),
+      body: ValueListenableBuilder(
+        valueListenable: _chatListBox.listenable(),
+        builder: (context, Box<Map<String, dynamic>> box, _) {
+          final chatNames = box.keys.toList();
+
+          return ListView.builder(
+            itemCount: chatNames.length,
+            itemBuilder: (context, index) {
+              final chatName = chatNames[index];
+              return ListTile(
+                title: Text(chatName),
+                onTap: () {
+                  // Переход к экрану с историей чата
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatScreen(chatName: 'newChatName',),
+                    ),
+                  );
+                },
+              );
+            },
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Создание нового чата
+          final newChatName = 'Chat ${DateTime.now().millisecondsSinceEpoch}';
+          _chatListBox.put(newChatName, {}); // Добавляем новый чат в список
+        },
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+}
