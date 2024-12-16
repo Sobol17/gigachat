@@ -16,7 +16,7 @@ class GigachatApi {
     };
   }
 
-  Future<String?> sendMessage(String userMessage) async {
+  Future<String?> sendMessage(List messages) async {
     final String? accessToken = _authBox.get('accessToken');
 
     if (accessToken == null) {
@@ -34,16 +34,7 @@ class GigachatApi {
       ),
       data: {
         "model": "GigaChat",
-        "messages": [
-          {
-            "role": "system",
-            "content": "Ты умный ассистент. Отвечай на вопросы пользователей естественно и дружелюбно."
-          },
-          {
-            "role": "user",
-            "content": userMessage,
-          }
-        ],
+        "messages": messages,
         "stream": false,
         "update_interval": 0
       },
